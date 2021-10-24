@@ -11,7 +11,7 @@ class BankAccount:
         return self
 
     def withdraw(self, amount):
-        if self.balance >= amount:
+        if (self.balance - amount) >= 0:
             self.balance -= amount
             return self
         else:
@@ -20,8 +20,8 @@ class BankAccount:
             return self
 
     def display_account_info(self):
-        print(f"Balance: {self.balance}")
-        return self
+        return self.balance
+        
 
     def yield_interest(self):
         if self.balance > 0:
@@ -40,18 +40,14 @@ class BankAccount:
 class User:
     def __init__(self, name):
         self.name = name
-        self.account = BankAccount(interest=.02, balance=0)
+        self.account = {
+            "checking" : BankAccount(.02, 0), #creating a checkings account with default interest and balance
+            "savings" : BankAccount(.10,1000) #creating a savings account with default interest and balance
+        }
 
-    def deposit(self, amount):
-        self.account.deposit(amount)
-        return self
-
-    def withdraw(self, amount):
-        self.account.withdraw(amount)
-        return self
-
-    def display_balance(self):
-        print(f"User: {self.name}, Balance: {self.account.balance}")
+    def display_balance(self): # prints both statements, stating the balance of both the cheking and savings accounts
+        print(f"User: {self.name}, Checking Balance: {self.account['checking'].display_account_info()}")  #display_account_info returns the current balance of the bank account
+        print(f"User: {self.name}, Savings Balance: {self.account['savings'].display_account_info()}")
         return self
 
     # def transfer_money(self, other_user, amount):
@@ -64,7 +60,12 @@ diana = User("Diana")
 kiwi = User("Kiwi")
 
 
-diana.deposit(1000).withdraw(100).display_balance()
-print()
-kiwi.deposit(50).deposit(100).withdraw(200).display_balance()
+diana.account['checking'].deposit(100).withdraw(50)
+diana.account['savings'].deposit(777)
+diana.display_balance()
+print() #for visual purposes, to separate the two users 
+kiwi.account['checking'].deposit(50).deposit(100).withdraw(1000)
+kiwi.account['savings'].deposit(900).withdraw(5)
+kiwi.display_balance()
+
 
